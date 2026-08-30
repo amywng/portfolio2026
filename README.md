@@ -12,7 +12,7 @@ Personal portfolio site built with Next.js, TypeScript, Tailwind CSS, Supabase, 
 - **Supabase** — database / content
 - **Spotify Web API** — recently played music
 - **next-themes** — dark / light mode
-- **react-simple-maps + d3-geo** — map visualizations
+- **react-simple-maps** — map visualizations
 - **Vercel** — deployment
 
 ---
