@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: theme("colors.paper");
+  color: theme("colors.ink");
+  overflow-x: hidden;
+}
+
+.dark body {
+  background: theme("colors.ink");
+  color: theme("colors.paper");
+}
+
+.dark .eyebrow::before {
+  background: theme("colors.fuchsia");
+}
+
+::selection {
+  background: theme("colors.fuchsia");
+  color: theme("colors.paper");
+}
+
+/* Custom cursor is disabled by default on touch devices via CursorTrail's own check,
+   and via prefers-reduced-motion below. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.eyebrow {
+  @apply font-mono text-sm uppercase tracking-[0.12em] text-fuchsia flex items-center gap-2 mb-4;
+}
+.eyebrow::before {
+  content: "";
+  width: 16px;
+  height: 1px;
+  background: theme("colors.fuchsia");
+}
+
+.section-header {
+  @apply font-display text-2xl md:text-4xl leading-none tracking-[-0.04em] mb-8;
+}
+
+/* Ink cursor trail (see components/CursorTrail.tsx) */
+body.cursor-none {
+  cursor: none;
+}
+body.cursor-none a,
+body.cursor-none button,
+body.cursor-none [data-cursor-hover] {
+  cursor: none;
+}
+
+@keyframes dot-fade {
+  0%   { opacity: 0.5; scale: 1; }
+  100% { opacity: 0;   scale: 2; }
+}
+.cursor-trail-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: theme("colors.fuchsia");
+  pointer-events: none;
+  z-index: 9998;
+  translate: -50% -50%;
+  animation: dot-fade 500ms ease-out forwards;
+}
+
+#ink-cursor.cursor-hover-active {
+  width: 38px;
+  height: 38px;
+  border-color: theme("colors.fuchsia");
+  background: rgba(43, 75, 255, 0.08);
+}
+
+/* Spotify "now playing" equalizer bars (components/Now.tsx) */
+@keyframes eq-bounce {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+.animate-eq {
+  animation: eq-bounce 1s infinite ease-in-out;
+  transform-origin: bottom;
+}
+
+/* visible keyboard focus, everywhere */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid theme("colors.fuchsia");
+  outline-offset: 3px;
+}
