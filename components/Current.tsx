@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { Song } from "@/lib/spotify";
 import type { Book, OnMyPlate, CurrentlyInto } from "@/lib/db";
 import { useTheme } from "next-themes";
@@ -75,7 +75,9 @@ function HeadphonesZone({
   const isMobile = useIsMobile();
   const current = songs[idx];
 
-  function handleClick() {
+  function handleClick(e: React.MouseEvent<HTMLDivElement>) {
+    e.stopPropagation();
+
     setIdx((i) => (i + 1) % songs.length);
 
     setActiveTooltip((currentTooltip) =>
@@ -235,7 +237,9 @@ function LaptopZone({
                 setActiveTooltip(null);
               }
             }}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
+
               setActiveTooltip((current) =>
                 current?.type === "sticker" && current.id === item.id
                   ? null
@@ -289,7 +293,11 @@ function BookStack({
 
   const hoveredBook = activeTooltip?.type === "book" ? activeTooltip.id : null;
 
-  function handleBookClick(id: "reading" | "finished") {
+  function handleBookClick(
+    e: React.MouseEvent<HTMLDivElement>,
+    id: "reading" | "finished",
+  ) {
+    e.stopPropagation();
     setActiveTooltip((current) =>
       current?.type === "book" && current.id === id
         ? null
@@ -390,7 +398,7 @@ function BookStack({
               setActiveTooltip(null);
             }
           }}
-          onClick={() => handleBookClick("finished")}
+          onClick={(e) => handleBookClick(e, "finished")}
           data-cursor-hover
         >
           <Image
@@ -426,7 +434,7 @@ function BookStack({
               setActiveTooltip(null);
             }
           }}
-          onClick={() => handleBookClick("reading")}
+          onClick={(e) => handleBookClick(e, "reading")}
           data-cursor-hover
         >
           <Image
@@ -531,7 +539,9 @@ function Plate({
             setActiveTooltip(null);
           }
         }}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
+
           setActiveTooltip((current) =>
             current?.type === "plate" ? null : { type: "plate" },
           );
@@ -573,6 +583,9 @@ export default function Current({
           aspect-[1673/2235]
           md:aspect-[2712/1250]
         "
+        onClick={() => {
+          setActiveTooltip(null);
+        }}
       >
         <div className="absolute inset-0 hidden md:block">
           <Image
@@ -627,8 +640,14 @@ export default function Current({
       </div>
 
       <p className="font-mono text-sm md:text-[15px] text-muted mt-9 md:mt-3 text-center">
-        hover to explore · click headphones to cycle through recently played
-        tracks
+        <span className="md:hidden">
+          tap to explore · click headphones to cycle through recently played
+          tracks
+        </span>
+        <span className="hidden md:inline">
+          hover to explore · click headphones to cycle through recently played
+          tracks
+        </span>
       </p>
     </div>
   );

@@ -38,13 +38,16 @@ export default async function Work() {
                         <h3 className="font-display text-xl leading-none tracking-[-0.02em] text-ink dark:text-paper transition-colors hover:text-fuchsia">
                           {role.title}
                         </h3>
-                        <span className="font-mono text-xs uppercase tracking-[0.12em] text-muted flex-shrink-0">
+                        <span className="hidden md:block font-mono text-xs uppercase tracking-[0.12em] text-muted flex-shrink-0">
                           {`${role.start_date} - ${role.end_date || "Present"}`}
                         </span>
                       </div>
                       <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted mt-1">
                         {job.company}
                       </p>
+                      <span className="md:hidden font-mono text-xs uppercase tracking-[0.08em] text-muted flex-shrink-0">
+                        {`${role.start_date} - ${role.end_date || "Present"}`}
+                      </span>
                       <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-ink-soft dark:text-white/80">
                         {role.description}
                       </p>

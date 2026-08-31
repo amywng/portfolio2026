@@ -29,6 +29,9 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "Amy Wang",
   description: "Portfolio of Amy Wang",
+  icons: {
+    icon: "/favicon.png"
+  }
 };
 
 export default function RootLayout({
