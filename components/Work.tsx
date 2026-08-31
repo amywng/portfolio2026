@@ -42,10 +42,10 @@ export default async function Work() {
                           {`${role.start_date} - ${role.end_date || "Present"}`}
                         </span>
                       </div>
-                      <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted mt-1">
+                      <p className="font-mono text-xs md:text-sm uppercase tracking-[0.12em] text-muted mt-1">
                         {job.company}
                       </p>
-                      <span className="md:hidden font-mono text-xs uppercase tracking-[0.08em] text-muted flex-shrink-0">
+                      <span className="md:hidden font-mono text-xs md:text-sm uppercase tracking-[0.08em] text-muted flex-shrink-0">
                         {`${role.start_date} - ${role.end_date || "Present"}`}
                       </span>
                       <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-ink-soft dark:text-white/80">
