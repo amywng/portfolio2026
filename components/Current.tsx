@@ -1,12 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Song } from "@/lib/spotify";
 import type { Book, OnMyPlate, CurrentlyInto } from "@/lib/db";
 import { useTheme } from "next-themes";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { useHoverDelay } from "@/hooks/useHoverDelay";
 
 type Props = {
   recentlyPlayed: Song[];
@@ -15,6 +14,15 @@ type Props = {
   plate: OnMyPlate[];
   into: CurrentlyInto[];
 };
+
+type ActiveTooltip =
+  | { type: "headphones" }
+  | { type: "sticker"; id: string }
+  | { type: "book"; id: "reading" | "finished" }
+  | { type: "plate" }
+  | null;
+
+type TooltipSetter = React.Dispatch<React.SetStateAction<ActiveTooltip>>;
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -38,27 +46,43 @@ function Tooltip({
 }) {
   return (
     <div
-      className={`absolute bottom-full mb-2 z-[100] pointer-events-none ${className ?? "left-1/2 -translate-x-1/2 w-64"}`}
+      className={`absolute bottom-full mb-2 z-[100] pointer-events-none ${
+        className ?? "left-1/2 -translate-x-1/2 w-64"
+      }`}
       style={style}
     >
       <div className="bg-ink dark:bg-paper text-paper dark:text-ink rounded-md px-3 py-2.5 shadow-lg text-left">
         <p className="font-mono text-[10px] uppercase tracking-widest text-fuchsia mb-1 font-semibold">
           {label}
         </p>
+
         {children}
       </div>
     </div>
   );
 }
 
-function HeadphonesZone({ songs }: { songs: Song[] }) {
+function HeadphonesZone({
+  songs,
+  activeTooltip,
+  setActiveTooltip,
+}: {
+  songs: Song[];
+  activeTooltip: ActiveTooltip;
+  setActiveTooltip: TooltipSetter;
+}) {
   const [idx, setIdx] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const current = songs[idx];
   const isMobile = useIsMobile();
+  const current = songs[idx];
 
   function handleClick() {
     setIdx((i) => (i + 1) % songs.length);
+
+    setActiveTooltip((currentTooltip) =>
+      currentTooltip?.type === "headphones"
+        ? currentTooltip
+        : { type: "headphones" },
+    );
   }
 
   return (
@@ -68,18 +92,36 @@ function HeadphonesZone({ songs }: { songs: Song[] }) {
         top-[61%] left-[68%] w-[24%] h-[18%]
         md:top-[60%] md:left-[69%] md:w-[15%] md:h-[30%]
       "
-      onMouseEnter={() => setIsVisible(true)}
-      onMouseLeave={() => setIsVisible(false)}
-      data-cursor-hover
+      onMouseEnter={() => {
+        if (!isMobile) {
+          setActiveTooltip({ type: "headphones" });
+        }
+      }}
+      onMouseLeave={() => {
+        if (!isMobile) {
+          setActiveTooltip(null);
+        }
+      }}
       onClick={handleClick}
+      data-cursor-hover
     >
-      {isVisible && current && (
+      {activeTooltip?.type === "headphones" && current && (
         <Tooltip
           label="recently played"
-          className={isMobile ? "w-48 z-10" : "w-48"}
-          style={isMobile
-            ? { top: "100%", bottom: "auto", left: "50%", transform: "translateX(-60%)", marginTop: "0.5rem" }
-            : { bottom: "-40%", left: "100%" }
+          className={isMobile ? "w-40 z-10" : "w-48"}
+          style={
+            isMobile
+              ? {
+                  top: "100%",
+                  bottom: "auto",
+                  left: "50%",
+                  transform: "translateX(-60%)",
+                  marginTop: "0.5rem",
+                }
+              : {
+                  bottom: "-40%",
+                  left: "100%",
+                }
           }
         >
           <div className="flex items-center gap-3">
@@ -90,10 +132,12 @@ function HeadphonesZone({ songs }: { songs: Song[] }) {
                 className="w-12 h-12 rounded flex-shrink-0 object-cover"
               />
             )}
+
             <div className="min-w-0">
               <p className="font-display italic text-[14px] leading-snug truncate">
                 {current.title}
               </p>
+
               <p className="font-mono text-[10px] text-paper/60 dark:text-ink/60 mt-0.5 truncate">
                 {current.artist}
               </p>
@@ -120,7 +164,10 @@ function NotepadZone({ items }: { items: CurrentlyInto[] }) {
             key={item.id}
             className="m-0 p-0 leading-none flex items-start gap-0.5 md:gap-1"
           >
-            <span className="text-fuchsia text-[6px] md:text-[8px] mt-[2px]">✦</span>
+            <span className="text-fuchsia text-[6px] md:text-[8px] mt-[2px]">
+              ✦
+            </span>
+
             <span className="font-mono text-black dark:text-white/80 text-[9px] md:text-[10px]">
               {item.text}
             </span>
@@ -131,10 +178,17 @@ function NotepadZone({ items }: { items: CurrentlyInto[] }) {
   );
 }
 
-function LaptopZone({ stickers }: { stickers: CurrentlyInto[] }) {
+function LaptopZone({
+  stickers,
+  activeTooltip,
+  setActiveTooltip,
+}: {
+  stickers: CurrentlyInto[];
+  activeTooltip: ActiveTooltip;
+  setActiveTooltip: TooltipSetter;
+}) {
   const isMobile = useIsMobile();
   const stickerW = isMobile ? 40 : 52;
-  const [hovered, setHovered] = useState<string | null>(null);
 
   const slots = [
     { top: "15%", left: "65%", rotate: -6 },
@@ -154,6 +208,9 @@ function LaptopZone({ stickers }: { stickers: CurrentlyInto[] }) {
     >
       {stickers.slice(0, slots.length).map((item, i) => {
         const slot = slots[i];
+        const isActive =
+          activeTooltip?.type === "sticker" && activeTooltip.id === item.id;
+
         return (
           <div
             key={item.id}
@@ -165,16 +222,39 @@ function LaptopZone({ stickers }: { stickers: CurrentlyInto[] }) {
               transform: `rotate(${slot.rotate}deg)`,
               zIndex: 12,
             }}
-            onMouseEnter={() => setHovered(item.id)}
-            onMouseLeave={() => setHovered(null)}
-            onClick={() => setHovered((current) => current === item.id ? null : item.id)}
+            onMouseEnter={() => {
+              if (!isMobile) {
+                setActiveTooltip({
+                  type: "sticker",
+                  id: item.id,
+                });
+              }
+            }}
+            onMouseLeave={() => {
+              if (!isMobile) {
+                setActiveTooltip(null);
+              }
+            }}
+            onClick={() => {
+              setActiveTooltip((current) =>
+                current?.type === "sticker" && current.id === item.id
+                  ? null
+                  : {
+                      type: "sticker",
+                      id: item.id,
+                    },
+              );
+            }}
             data-cursor-hover
           >
-            {hovered === item.id && (
+            {isActive && (
               <Tooltip label={item.category} className="w-36">
-                <p className="font-mono text-[10px] leading-snug">{item.text}</p>
+                <p className="font-mono text-[10px] leading-snug">
+                  {item.text}
+                </p>
               </Tooltip>
             )}
+
             {item.sticker && (
               <Image
                 src={item.sticker}
@@ -194,15 +274,28 @@ function LaptopZone({ stickers }: { stickers: CurrentlyInto[] }) {
 function BookStack({
   reading,
   finished,
+  activeTooltip,
+  setActiveTooltip,
 }: {
   reading: Book | undefined;
   finished: Book[];
+  activeTooltip: ActiveTooltip;
+  setActiveTooltip: TooltipSetter;
 }) {
-  const { value: hovered, show, hide, keep, clear } = useHoverDelay<"reading" | "finished">();
   const recent = finished[0];
   const isMobile = useIsMobile();
   const coverW = isMobile ? 60 : 90;
   const offset = isMobile ? 24 : 18;
+
+  const hoveredBook = activeTooltip?.type === "book" ? activeTooltip.id : null;
+
+  function handleBookClick(id: "reading" | "finished") {
+    setActiveTooltip((current) =>
+      current?.type === "book" && current.id === id
+        ? null
+        : { type: "book", id },
+    );
+  }
 
   return (
     <div
@@ -212,31 +305,58 @@ function BookStack({
         md:top-[28%] md:right-[18%]
       "
     >
-      {hovered && (
+      {hoveredBook && (
         <div
           className="absolute z-[100] w-48 md:w-64 rotate-12"
-          style={isMobile
-            ? { bottom: "100%", right: "80%", marginBottom: "0.5rem" }
-            : { bottom: "100%", left: "-60%", marginBottom: "1rem" }
+          style={
+            isMobile
+              ? {
+                  bottom: "100%",
+                  right: "80%",
+                  marginBottom: "0.5rem",
+                }
+              : {
+                  bottom: "100%",
+                  left: "-60%",
+                  marginBottom: "1rem",
+                }
           }
-          onMouseEnter={keep}
-          onMouseLeave={hide}
         >
-          <div className="bg-ink dark:bg-paper text-paper dark:text-ink rounded-md px-3 py-2.5 shadow-lg text-left pointer-events-auto">
+          <div className="bg-ink dark:bg-paper text-paper dark:text-ink rounded-md px-3 py-2.5 shadow-lg text-left pointer-events-none">
             <p className="font-mono text-[10px] uppercase tracking-widest text-fuchsia mb-1 font-semibold">
-              {hovered === "reading" ? "currently reading" : "recently finished"}
+              {hoveredBook === "reading"
+                ? "currently reading"
+                : "recently finished"}
             </p>
-            {hovered === "reading" && reading && (
+
+            {hoveredBook === "reading" && reading && (
               <>
-                <p className="font-display italic text-[14px] leading-snug">{reading.title}</p>
-                <p className="font-mono text-[10px] text-paper/60 dark:text-ink/60 mt-0.5">{reading.author}</p>
+                <p className="font-display italic text-[14px] leading-snug">
+                  {reading.title}
+                </p>
+
+                <p className="font-mono text-[10px] text-paper/60 dark:text-ink/60 mt-0.5">
+                  {reading.author}
+                </p>
               </>
             )}
-            {hovered === "finished" && recent && (
+
+            {hoveredBook === "finished" && recent && (
               <>
-                <p className="font-display italic text-[14px] leading-snug">{recent.title}</p>
-                <p className="font-mono text-[10px] text-paper/60 dark:text-ink/60 mt-0.5">{recent.author}</p>
-                {recent.rating && <div className="mt-1"><StarRating rating={recent.rating} /></div>}
+                <p className="font-display italic text-[14px] leading-snug">
+                  {recent.title}
+                </p>
+
+                <p className="font-mono text-[10px] text-paper/60 dark:text-ink/60 mt-0.5">
+                  {recent.author}
+                </p>
+
+                {recent.rating && (
+                  <div className="mt-1">
+                    <StarRating rating={recent.rating} />
+                  </div>
+                )}
+
                 {recent.review && (
                   <p className="font-mono text-[10px] text-paper/50 dark:text-ink/50 mt-1 leading-relaxed">
                     {recent.review}
@@ -251,10 +371,26 @@ function BookStack({
       {recent?.cover_url && (
         <div
           className="absolute cursor-pointer"
-          style={{ top: offset, left: offset, width: coverW, zIndex: 1 }}
-          onMouseEnter={() => show("finished")}
-          onMouseLeave={hide}
-          onClick={() => hovered === "finished" ? clear() : show("finished")}
+          style={{
+            top: offset,
+            left: offset,
+            width: coverW,
+            zIndex: 1,
+          }}
+          onMouseEnter={() => {
+            if (!isMobile) {
+              setActiveTooltip({
+                type: "book",
+                id: "finished",
+              });
+            }
+          }}
+          onMouseLeave={() => {
+            if (!isMobile) {
+              setActiveTooltip(null);
+            }
+          }}
+          onClick={() => handleBookClick("finished")}
           data-cursor-hover
         >
           <Image
@@ -271,10 +407,26 @@ function BookStack({
       {reading?.cover_url && (
         <div
           className="absolute cursor-pointer"
-          style={{ top: 0, left: 0, width: coverW, zIndex: 2 }}
-          onMouseEnter={() => show("reading")}
-          onMouseLeave={hide}
-          onClick={() => hovered === "reading" ? clear() : show("reading")}
+          style={{
+            top: 0,
+            left: 0,
+            width: coverW,
+            zIndex: 2,
+          }}
+          onMouseEnter={() => {
+            if (!isMobile) {
+              setActiveTooltip({
+                type: "book",
+                id: "reading",
+              });
+            }
+          }}
+          onMouseLeave={() => {
+            if (!isMobile) {
+              setActiveTooltip(null);
+            }
+          }}
+          onClick={() => handleBookClick("reading")}
           data-cursor-hover
         >
           <Image
@@ -291,21 +443,33 @@ function BookStack({
   );
 }
 
-function Plate({ items }: { items: OnMyPlate[] }) {
+function Plate({
+  items,
+  activeTooltip,
+  setActiveTooltip,
+}: {
+  items: OnMyPlate[];
+  activeTooltip: ActiveTooltip;
+  setActiveTooltip: TooltipSetter;
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const { value: hovered, show, hide } = useHoverDelay<true>();
   const isMobile = useIsMobile();
 
   useEffect(() => {
     if (items.length <= 1) return;
+
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % items.length);
     }, 4800);
+
     return () => clearInterval(interval);
   }, [items]);
 
   const activeItem = items[activeIndex];
+
   if (!activeItem) return null;
+
+  const isActive = activeTooltip?.type === "plate";
 
   return (
     <div
@@ -315,21 +479,37 @@ function Plate({ items }: { items: OnMyPlate[] }) {
         md:top-[57%] md:left-[15%] md:w-[17%] md:h-[34%]
       "
     >
-      {hovered && (
+      {isActive && (
         <Tooltip
           className="w-36"
-          style={isMobile
-            ? { bottom: "auto", top: "100%", left: "80%", transform: "translateX(-50%)", marginTop: "0.5rem" }
-            : { bottom: "auto", left: "-72%", top: "auto", marginBottom: "-12%" }
+          style={
+            isMobile
+              ? {
+                  bottom: "auto",
+                  top: "100%",
+                  left: "80%",
+                  transform: "translateX(-50%)",
+                  marginTop: "0.5rem",
+                }
+              : {
+                  bottom: "auto",
+                  left: "-72%",
+                  top: "auto",
+                  marginBottom: "-12%",
+                }
           }
           label="on my plate"
         >
-          <p className="font-display italic text-[14px] leading-snug">{activeItem.dish}</p>
+          <p className="font-display italic text-[14px] leading-snug">
+            {activeItem.dish}
+          </p>
+
           {activeItem.restaurant && (
             <p className="font-mono text-[10px] text-paper/60 dark:text-ink/60 mt-0.5">
               {activeItem.restaurant}
             </p>
           )}
+
           {activeItem.note && (
             <p className="font-mono text-[10px] text-paper/50 dark:text-ink/50 mt-1 leading-relaxed">
               {activeItem.note}
@@ -337,11 +517,25 @@ function Plate({ items }: { items: OnMyPlate[] }) {
           )}
         </Tooltip>
       )}
+
       <div
         className="relative cursor-pointer h-full w-full flex items-center justify-center p-4"
         data-cursor-hover
-        onMouseEnter={() => show(true)}
-        onMouseLeave={hide}
+        onMouseEnter={() => {
+          if (!isMobile) {
+            setActiveTooltip({ type: "plate" });
+          }
+        }}
+        onMouseLeave={() => {
+          if (!isMobile) {
+            setActiveTooltip(null);
+          }
+        }}
+        onClick={() => {
+          setActiveTooltip((current) =>
+            current?.type === "plate" ? null : { type: "plate" },
+          );
+        }}
       >
         <Image
           src={activeItem.image_url}
@@ -355,7 +549,7 @@ function Plate({ items }: { items: OnMyPlate[] }) {
   );
 }
 
-export default function Currently({
+export default function Current({
   recentlyPlayed,
   reading,
   finished,
@@ -363,9 +557,13 @@ export default function Currently({
   into,
 }: Props) {
   const computerStickers = into.filter((i) => i.location === "laptop");
+
   const notepadItems = into.filter((i) => i.location === "notepad");
+
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
+
+  const [activeTooltip, setActiveTooltip] = useState<ActiveTooltip>(null);
 
   return (
     <div className="w-full mt-2">
@@ -378,16 +576,21 @@ export default function Currently({
       >
         <div className="absolute inset-0 hidden md:block">
           <Image
-            src={isDark ? "/currently/desk_dark.png" : "/currently/desk_light.png"}
+            src={isDark ? "/current/desk_dark.png" : "/current/desk_light.png"}
             alt="desk"
             fill
             className="object-contain rounded-xl"
             priority
           />
         </div>
+
         <div className="absolute inset-0 block md:hidden">
           <Image
-            src={isDark ? "/currently/desk_mobile_dark.png" : "/currently/desk_mobile_light.png"}
+            src={
+              isDark
+                ? "/current/desk_mobile_dark.png"
+                : "/current/desk_mobile_light.png"
+            }
             alt="desk"
             fill
             className="object-contain rounded-xl"
@@ -395,15 +598,37 @@ export default function Currently({
           />
         </div>
 
-        <HeadphonesZone songs={recentlyPlayed} />
+        <HeadphonesZone
+          songs={recentlyPlayed}
+          activeTooltip={activeTooltip}
+          setActiveTooltip={setActiveTooltip}
+        />
+
         <NotepadZone items={notepadItems} />
-        <LaptopZone stickers={computerStickers} />
-        <BookStack reading={reading} finished={finished} />
-        <Plate items={plate} />
+
+        <LaptopZone
+          stickers={computerStickers}
+          activeTooltip={activeTooltip}
+          setActiveTooltip={setActiveTooltip}
+        />
+
+        <BookStack
+          reading={reading}
+          finished={finished}
+          activeTooltip={activeTooltip}
+          setActiveTooltip={setActiveTooltip}
+        />
+
+        <Plate
+          items={plate}
+          activeTooltip={activeTooltip}
+          setActiveTooltip={setActiveTooltip}
+        />
       </div>
 
-      <p className="font-mono text-sm md:text-xs text-muted mt-9 md:mt-3 text-center">
-        hover to explore · click headphones to cycle through recently played tracks
+      <p className="font-mono text-sm md:text-[15px] text-muted mt-9 md:mt-3 text-center">
+        hover to explore · click headphones to cycle through recently played
+        tracks
       </p>
     </div>
   );

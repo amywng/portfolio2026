@@ -4,7 +4,7 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 import { ArtPiece } from "@/lib/db";
 import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
-    
+
 const isVideo = (url: string) => /\.(mp4|mov|webm)$/i.test(url);
 
 export default function ArtGallery({ art }: { art: ArtPiece[] }) {
@@ -44,7 +44,7 @@ export default function ArtGallery({ art }: { art: ArtPiece[] }) {
           style={{
             left: pos.x + 16,
             top: pos.y + 16,
-            transform: 
+            transform:
               // flip left if too close to right edge
               pos.x > window.innerWidth - 220
                 ? `translateX(calc(-100% - 32px))`
@@ -70,13 +70,17 @@ export default function ArtGallery({ art }: { art: ArtPiece[] }) {
           <div
             key={piece.id}
             className="break-inside-avoid mb-3 md:mb-4 group relative overflow-hidden rounded-md z-10"
-            onMouseEnter={() => { if (!isMobile) setTooltip(piece)} }
-            onMouseLeave={() => { if (!isMobile) setTooltip(null)} }
+            onMouseEnter={() => {
+              if (!isMobile) setTooltip(piece);
+            }}
+            onMouseLeave={() => {
+              if (!isMobile) setTooltip(null);
+            }}
             onClick={() => {
               if (isMobile) {
                 setTooltip((current) =>
-                  current?.id === piece.id ? null : piece
-                )
+                  current?.id === piece.id ? null : piece,
+                );
               }
             }}
             data-cursor-hover

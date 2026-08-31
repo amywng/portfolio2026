@@ -59,8 +59,14 @@ body.cursor-none [data-cursor-hover] {
 }
 
 @keyframes dot-fade {
-  0%   { opacity: 0.5; scale: 1; }
-  100% { opacity: 0;   scale: 2; }
+  0% {
+    opacity: 0.5;
+    scale: 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 2;
+  }
 }
 .cursor-trail-dot {
   position: fixed;

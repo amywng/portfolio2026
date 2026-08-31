@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useVimCommands } from '../hooks/useVimCommands';
+import React from "react";
+import { useVimCommands } from "../hooks/useVimCommands";
 
 export default function VimCommandsProvider({
   children,

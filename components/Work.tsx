@@ -35,17 +35,17 @@ export default async function Work() {
                       className={i > 0 ? "pt-4 border-t border-line/60" : ""}
                     >
                       <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 md:gap-4">
-                        <h3 className="font-display text-[20px] leading-none tracking-[-0.02em] text-ink dark:text-paper transition-colors hover:text-fuchsia">
+                        <h3 className="font-display text-xl leading-none tracking-[-0.02em] text-ink dark:text-paper transition-colors hover:text-fuchsia">
                           {role.title}
                         </h3>
-                        <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted flex-shrink-0">
-                          {`${role.start_date} - ${role.end_date || 'Present'}`}
+                        <span className="font-mono text-xs uppercase tracking-[0.12em] text-muted flex-shrink-0">
+                          {`${role.start_date} - ${role.end_date || "Present"}`}
                         </span>
                       </div>
-                      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted mt-1">
+                      <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-muted mt-1">
                         {job.company}
                       </p>
-                      <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-ink-soft dark:text-white/80">
+                      <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-ink-soft dark:text-white/80">
                         {role.description}
                       </p>
                     </div>

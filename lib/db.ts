@@ -67,7 +67,7 @@ export type CurrentlyInto = {
   created_at: number;
 };
 
-// elsewhere
+// travel
 export type TravelPlace = {
   id: string;
   slug: string;
@@ -120,7 +120,7 @@ export async function getArt(): Promise<ArtPiece[]> {
 }
 
 // currently
-export async function getCurrentlyData(): Promise<{
+export async function getCurrentData(): Promise<{
   reading: Book | undefined;
   finished: Book[];
   plate: OnMyPlate[];
@@ -152,7 +152,7 @@ export async function getCurrentlyData(): Promise<{
   };
 }
 
-// elsewhere
+// travel
 export async function getTravelPlaces(): Promise<TravelPlace[]> {
   const { data } = await supabase
     .from("travel_places")
@@ -161,11 +161,10 @@ export async function getTravelPlaces(): Promise<TravelPlace[]> {
   return (data ?? []) as TravelPlace[];
 }
 
-export async function getTravelPlace(slug: string): Promise<
-  {
-    place: TravelPlace | null,
-    images: TravelImage[]
-  }> {
+export async function getTravelPlace(slug: string): Promise<{
+  place: TravelPlace | null;
+  images: TravelImage[];
+}> {
   const [place, images] = await Promise.all([
     supabase.from("travel_places").select("*").eq("slug", slug).single(),
     supabase

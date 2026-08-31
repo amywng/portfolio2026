@@ -1,5 +1,6 @@
 const TOKEN_URL = "https://accounts.spotify.com/api/token";
-const NOW_PLAYING_URL = "https://api.spotify.com/v1/me/player/currently-playing";
+const NOW_PLAYING_URL =
+  "https://api.spotify.com/v1/me/player/currently-playing";
 const RECENTLY_PLAYED_URL =
   "https://api.spotify.com/v1/me/player/recently-played?limit=10";
 
@@ -10,12 +11,12 @@ async function getAccessToken() {
   if (!SPOTIFY_CLIENT_ID || !SPOTIFY_CLIENT_SECRET || !SPOTIFY_REFRESH_TOKEN) {
     throw new Error(
       "Missing Spotify env vars. Add SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, " +
-        "and SPOTIFY_REFRESH_TOKEN to .env.local — see README.md."
+        "and SPOTIFY_REFRESH_TOKEN to .env.local — see README.md.",
     );
   }
 
   const basic = Buffer.from(
-    `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
+    `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`,
   ).toString("base64");
 
   const res = await fetch(TOKEN_URL, {
@@ -58,12 +59,24 @@ export async function getRecentlyPlayed(): Promise<Song[]> {
     const data = await recentRes.json();
     const songs = data?.items;
     if (songs) {
-      return songs.map((song: { track: { name: string; artists: { name: string }[]; album: { images: { url: string }[] }; external_urls: { spotify: string } } }) => ({
-        title: song.track.name,
-        artist: song.track.artists?.map((a: { name: string }) => a.name).join(", ") ?? null,
-        albumArt: song.track.album?.images?.[0]?.url ?? null,
-        songUrl: song.track.external_urls?.spotify ?? null,
-      }));
+      return songs.map(
+        (song: {
+          track: {
+            name: string;
+            artists: { name: string }[];
+            album: { images: { url: string }[] };
+            external_urls: { spotify: string };
+          };
+        }) => ({
+          title: song.track.name,
+          artist:
+            song.track.artists
+              ?.map((a: { name: string }) => a.name)
+              .join(", ") ?? null,
+          albumArt: song.track.album?.images?.[0]?.url ?? null,
+          songUrl: song.track.external_urls?.spotify ?? null,
+        }),
+      );
     }
   }
 

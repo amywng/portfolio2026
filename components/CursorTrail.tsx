@@ -7,8 +7,11 @@ export default function CursorTrail() {
 
   useEffect(() => {
     const isTouch = window.matchMedia("(pointer: coarse)").matches;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (isTouch || reducedMotion) return;
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if (isTouch || reducedMotion || isSafari) return;
 
     document.body.classList.add("cursor-none");
     const cursor = cursorRef.current;

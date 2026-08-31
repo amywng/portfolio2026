@@ -120,7 +120,7 @@ export default function TravelMap({ places }: { places: TravelPlace[] }) {
   function handleReset() {
     const isMobile = window.innerWidth < 768;
     setZoom(isMobile ? INITIAL_ZOOM_MOBILE : INITIAL_ZOOM_WEB);
-    setCenter(isMobile? INITIAL_CENTER_MOBILE : INITIAL_CENTER_WEB);
+    setCenter(isMobile ? INITIAL_CENTER_MOBILE : INITIAL_CENTER_WEB);
     closePopup();
   }
 
@@ -321,7 +321,7 @@ export default function TravelMap({ places }: { places: TravelPlace[] }) {
             className="h-2.5 w-2.5 rounded-full"
             style={{ backgroundColor: pinFill }}
           />
-          pic(s) included
+          check out pic(s)!
         </span>
 
         <span className="flex items-center gap-1.5">

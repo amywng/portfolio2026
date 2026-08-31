@@ -7,20 +7,20 @@ import { useRouter } from "next/navigation";
 
 const SHORTCUTS = [
   { keys: ["gg", ":1"], description: "go to top of page" },
-  { keys: ["G"],        description: "go to bottom of page" },
-  { keys: ["d"],        description: "toggle dark / light mode" },
-  { keys: ["."],        description: "toggle grid overlay" },
-  { keys: ["?"],        description: "show keyboard shortcuts" },
-  { keys: ["j"],        description: "scroll down" },
-  { keys: ["k"],        description: "scroll up" },
-  { keys: ["h"],        description: "go to home" },
+  { keys: ["G"], description: "go to bottom of page" },
+  { keys: ["d"], description: "toggle dark / light mode" },
+  { keys: ["."], description: "toggle grid overlay" },
+  { keys: ["?"], description: "show keyboard shortcuts" },
+  { keys: ["j"], description: "scroll down" },
+  { keys: ["k"], description: "scroll up" },
+  { keys: ["h"], description: "go to home" },
 ];
 
 const NAV_LINKS = [
   { href: "/#experience", label: "experience" },
-  { href: "/art",         label: "art" },
-  { href: "/currently",   label: "currently" },
-  { href: "/elsewhere",   label: "elsewhere" },
+  { href: "/art", label: "art" },
+  { href: "/current", label: "current" },
+  { href: "/travel", label: "travel" },
 ];
 
 export default function Nav() {
@@ -40,17 +40,31 @@ export default function Nav() {
   const toggleGrid = useCallback(() => setGrid((g) => !g), []);
   const toggleShortcuts = useCallback(() => setShowShortcuts((s) => !s), []);
 
-  useEffect(() => { setMenuOpen(false); }, []);
+  useEffect(() => {
+    setMenuOpen(false);
+  }, []);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      )
+        return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       switch (e.key.toLowerCase()) {
-        case "d": toggleDark(); break;
-        case ".": toggleGrid(); break;
-        case "h": router.push("/"); break;
-        case "?": toggleShortcuts(); break;
+        case "d":
+          toggleDark();
+          break;
+        case ".":
+          toggleGrid();
+          break;
+        case "h":
+          router.push("/");
+          break;
+        case "?":
+          toggleShortcuts();
+          break;
         case "escape":
           setShowShortcuts(false);
           setMenuOpen(false);
@@ -86,15 +100,19 @@ export default function Nav() {
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-paper/85 dark:bg-ink/85 backdrop-blur-sm border-b border-line dark:border-white/10">
         <div className="max-w-wide mx-auto px-5 md:px-7 h-14 flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="font-mono text-[13px]" data-cursor-hover>
+          <Link href="/" className="font-mono text-sm" data-cursor-hover>
             amy /
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-6 font-mono text-xs text-ink-soft dark:text-white/80">
+          <div className="hidden md:flex items-center gap-6 font-mono text-sm text-ink-soft dark:text-white/80">
             {NAV_LINKS.map(({ href, label }) => (
-              <Link key={label} href={href} className="hover:text-fuchsia transition-colors" data-cursor-hover>
+              <Link
+                key={label}
+                href={href}
+                className="hover:text-fuchsia transition-colors"
+                data-cursor-hover
+              >
                 {label}
               </Link>
             ))}
@@ -102,11 +120,18 @@ export default function Nav() {
             <span className="w-px h-3.5 bg-line dark:bg-white/10" aria-hidden />
 
             <div className="flex items-center gap-1">
-              <IconButton onClick={toggleDark} title={isDark ? "light mode (D)" : "dark mode (D)"}>
+              <IconButton
+                onClick={toggleDark}
+                title={isDark ? "light mode (D)" : "dark mode (D)"}
+              >
                 {mounted && isDark ? <SunIcon /> : <MoonIcon />}
               </IconButton>
               <div className="hidden md:flex items-center gap-1">
-                <IconButton onClick={toggleGrid} title="grid overlay (.)" active={grid}>
+                <IconButton
+                  onClick={toggleGrid}
+                  title="grid overlay (.)"
+                  active={grid}
+                >
                   <GridIcon />
                 </IconButton>
                 <IconButton onClick={toggleShortcuts} title="shortcuts (?)">
@@ -118,7 +143,10 @@ export default function Nav() {
 
           {/* Mobile right side — dark toggle + hamburger */}
           <div className="flex md:hidden items-center gap-2">
-            <IconButton onClick={toggleDark} title={isDark ? "light mode" : "dark mode"}>
+            <IconButton
+              onClick={toggleDark}
+              title={isDark ? "light mode" : "dark mode"}
+            >
               {mounted && isDark ? <SunIcon /> : <MoonIcon />}
             </IconButton>
             <button
@@ -150,7 +178,6 @@ export default function Nav() {
         )}
       </nav>
 
-      {/* Shortcuts modal */}
       {showShortcuts && (
         <div
           className="fixed inset-0 z-[300] flex items-center justify-center"
@@ -166,8 +193,13 @@ export default function Nav() {
             </p>
             <div className="space-y-3">
               {SHORTCUTS.map(({ keys, description }) => (
-                <div key={description} className="flex items-center justify-between gap-4">
-                  <span className="text-[13px] text-ink-soft dark:text-white/80">{description}</span>
+                <div
+                  key={description}
+                  className="flex items-center justify-between gap-4"
+                >
+                  <span className="text-[13px] text-ink-soft dark:text-white/80">
+                    {description}
+                  </span>
                   <div className="flex items-center gap-1 flex-shrink-0">
                     {keys.map((k, i) => (
                       <kbd
@@ -194,7 +226,12 @@ export default function Nav() {
   );
 }
 
-function IconButton({ onClick, title, active, children }: {
+function IconButton({
+  onClick,
+  title,
+  active,
+  children,
+}: {
   onClick: () => void;
   title: string;
   active?: boolean;
@@ -215,57 +252,115 @@ function IconButton({ onClick, title, active, children }: {
 
 function SunIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="4"/>
-      <line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-      <line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="4" />
+      <line x1="12" y1="2" x2="12" y2="4" />
+      <line x1="12" y1="20" x2="12" y2="22" />
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+      <line x1="2" y1="12" x2="4" y2="12" />
+      <line x1="20" y1="12" x2="22" y2="12" />
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
     </svg>
   );
 }
 
 function MoonIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
     </svg>
   );
 }
 
 function GridIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-      <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="3" width="7" height="7" />
+      <rect x="14" y="3" width="7" height="7" />
+      <rect x="14" y="14" width="7" height="7" />
+      <rect x="3" y="14" width="7" height="7" />
     </svg>
   );
 }
 
 function KeyboardIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="6" width="20" height="13" rx="2"/>
-      <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/>
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="6" width="20" height="13" rx="2" />
+      <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8" />
     </svg>
   );
 }
 
 function HamburgerIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-      <line x1="3" y1="6" x2="21" y2="6"/>
-      <line x1="3" y1="12" x2="21" y2="12"/>
-      <line x1="3" y1="18" x2="21" y2="18"/>
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    >
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="18" x2="21" y2="18" />
     </svg>
   );
 }
 
 function CloseIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-      <line x1="18" y1="6" x2="6" y2="18"/>
-      <line x1="6" y1="6" x2="18" y2="18"/>
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    >
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
   );
 }

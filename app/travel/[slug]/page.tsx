@@ -8,7 +8,7 @@ export async function generateStaticParams() {
   return places.map((p) => ({ slug: p.slug }));
 }
 
-export const revalidate = 3600;
+export const revalidate = 300;
 
 export default async function TravelPlacePage({
   params,
@@ -22,15 +22,17 @@ export default async function TravelPlacePage({
   return (
     <main className="max-w-wide mx-auto px-4 md:px-7 pt-20 md:pt-28 pb-20 md:pb-28">
       <Link
-        href="/elsewhere"
+        href="/travel"
         className="inline-flex min-h-11 items-center font-mono text-sm md:text-xs text-muted hover:text-fuchsia transition-colors"
         data-cursor-hover
       >
-        ← elsewhere
+        ← travel
       </Link>
 
-      <div className="mt-8">
-        <p className="eyebrow">{place.states ? `${place.states}` : place.country}</p>
+      <div className="mt-2 md:mt-4">
+        <p className="eyebrow">
+          {place.states ? `${place.states}` : place.country}
+        </p>
         <h1 className="break-words font-display italic font-light text-5xl md:text-6xl tracking-[-0.02em]">
           {place.name}
         </h1>
@@ -82,7 +84,9 @@ export default async function TravelPlacePage({
                   <>
                     {/* Desktop: hover overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity items-end p-3 hidden md:flex">
-                      <p className="font-mono text-[10px] text-paper">{img.caption}</p>
+                      <p className="font-mono text-[10px] text-paper">
+                        {img.caption}
+                      </p>
                     </div>
                     {/* Mobile: always visible caption below */}
                     <p className="mt-1.5 px-0.5 font-mono text-[10px] leading-relaxed text-muted md:hidden">

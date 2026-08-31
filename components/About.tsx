@@ -25,7 +25,7 @@ export default function About() {
         <p>
           Outside of work, I love trying new restaurants (and rating them on Beli), staying
           active, and baking. See what I'm up to right now{" "}
-          <a href="/currently" className="text-fuchsia hover:font-semibold" data-cursor-hover>here</a>.
+          <a href="/current" className="text-fuchsia hover:font-semibold" data-cursor-hover>here</a>.
         </p>
       </div>
     </section>

@@ -16,8 +16,9 @@ export default function Hero() {
           </h1>
           <div className="w-14 h-0.5 bg-fuchsia my-5" />
           <p className="text-[15px] text-[16.5px] text-ink-soft dark:text-white/80 leading-relaxed">
-            I'm a rising senior at Northeastern University studying Computer Science and Media Arts.
-            I like building things, learning new vim and Linux commands, and following stack traces.
+            I'm a rising senior at Northeastern University studying Computer
+            Science and Media Arts. I like building things, learning new Vim and
+            Linux commands, and following stack traces.
           </p>
           <div className="mt-7 flex flex-wrap gap-x-6 gap-y-1 font-mono text-xs text-muted">
             <span>based in — Boston</span>
