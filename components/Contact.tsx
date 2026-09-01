@@ -20,7 +20,7 @@ export default function Contact() {
         <div className="mt-8 flex flex-wrap items-center gap-2 md:gap-4 font-mono text-sm text-muted">
           <a
             href="mailto:acwng2@gmail.com"
-            className="hover:text-fuchsia"
+            className="hover:text-fuchsia transition-colors"
             data-cursor-hover
           >
             acwng2@gmail.com
@@ -30,7 +30,7 @@ export default function Contact() {
             href="https://github.com/amywng"
             target="_blank"
             rel="noreferrer"
-            className="hover:text-fuchsia"
+            className="hover:text-fuchsia transition-colors"
             data-cursor-hover
           >
             github
@@ -40,7 +40,7 @@ export default function Contact() {
             href="https://www.linkedin.com/in/amyluwang/"
             target="_blank"
             rel="noreferrer"
-            className="hover:text-fuchsia"
+            className="hover:text-fuchsia transition-colors"
             data-cursor-hover
           >
             linkedin

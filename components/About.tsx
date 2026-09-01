@@ -15,11 +15,11 @@ export default function About() {
         <p>
           I haven't stopped building since, whether it be end-to-end Android features at
           Priceline or full-stack web applications at {" "}
-          <a href="https://c4cneu.com" rel="noreferrer" className="text-[#605ACD] hover:font-semibold" data-cursor-hover target="_blank">Code4Community</a>. 
+          <a href="https://c4cneu.com" rel="noreferrer" className="text-[#605ACD] hover:font-semibold transition-colors" data-cursor-hover target="_blank">Code4Community</a>. 
           I'm currently a software engineer co-op at {" "}
-          <a href="https://www.whoop.com" rel="noreferrer" className="text-black dark:text-white hover:font-semibold" data-cursor-hover target="_blank">WHOOP</a>{" "}
+          <a href="https://www.whoop.com" rel="noreferrer" className="text-black dark:text-white hover:font-semibold transition-colors" data-cursor-hover target="_blank">WHOOP</a>{" "}
           and Director of Operations at {" "}
-          <a href="https://c4cneu.com" rel="noreferrer" className="text-[#605ACD] hover:font-semibold" data-cursor-hover target="_blank">Code4Community</a>
+          <a href="https://c4cneu.com" rel="noreferrer" className="text-[#605ACD] hover:font-semibold transition-colors" data-cursor-hover target="_blank">Code4Community</a>
           , two environments where I've learned what it means to build under real pressure and for real people.
         </p>
         <p>

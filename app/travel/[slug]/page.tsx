@@ -5,7 +5,11 @@ import { getTravelPlace, getTravelPlaces } from "@/lib/db";
 
 export async function generateStaticParams() {
   const places = await getTravelPlaces();
-  return places.map((p) => ({ slug: p.slug }));
+  return places
+    .filter((place) => place.type === 'pin')
+    .map((p) => ({ 
+      slug: p.slug 
+    }));
 }
 
 export const revalidate = 300;
@@ -17,7 +21,7 @@ export default async function TravelPlacePage({
 }) {
   const { slug } = await params;
   const { place, images } = await getTravelPlace(slug);
-  if (!place) notFound();
+  if (!place || place.type !== 'pin') notFound();
 
   return (
     <main className="max-w-wide mx-auto px-4 md:px-7 pt-20 md:pt-28 pb-20 md:pb-28">

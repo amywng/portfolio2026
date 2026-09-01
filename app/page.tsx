@@ -1,6 +1,7 @@
 import About from "@/components/About";
 import Contact from "@/components/Contact";
 import Hero from "@/components/Hero";
+import Skills from "@/components/Skills";
 import Work from "@/components/Work";
 
 export const revalidate = 86400;
@@ -10,6 +11,7 @@ export default function Home() {
     <main>
       <Hero />
       <About />
+      <Skills />
       <Work />
       <Contact />
     </main>
