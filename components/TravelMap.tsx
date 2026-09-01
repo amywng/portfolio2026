@@ -13,6 +13,7 @@ import {
 } from "react-simple-maps";
 import type { TravelPlace } from "@/lib/db";
 import { useHoverDelay } from "../hooks/useHoverDelay";
+import { MdOpenInNew } from "react-icons/md";
 
 const GEO_URL =
   "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
@@ -396,11 +397,9 @@ function TravelMapPopup({
             </p>
 
             {place.type === "pin" && (
-              <img
-                src="/icons/open_in_new.svg"
-                alt=""
+              <MdOpenInNew
                 aria-hidden="true"
-                className="h-3 w-3 shrink-0"
+                className="h-3 w-3 shrink-0 text-fuchsia"
               />
             )}
           </div>

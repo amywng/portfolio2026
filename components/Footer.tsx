@@ -4,8 +4,7 @@ export default function Footer() {
       <span className="flex gap-6">
         <a
           href="mailto:acwng2@gmail.com"
-          target="_blank"
-          className="hover:text-fuchsia"
+          className="hover:text-fuchsia transition-colors"
           data-cursor-hover
         >
           email
@@ -13,7 +12,7 @@ export default function Footer() {
         <a
           href="https://github.com/amywng"
           target="_blank"
-          className="hover:text-fuchsia"
+          className="hover:text-fuchsia transition-colors"
           data-cursor-hover
         >
           github
@@ -21,7 +20,7 @@ export default function Footer() {
         <a
           href="https://www.linkedin.com/in/amyluwang/"
           target="_blank"
-          className="hover:text-fuchsia"
+          className="hover:text-fuchsia transition-colors"
           data-cursor-hover
         >
           linkedin
