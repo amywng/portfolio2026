@@ -17,6 +17,7 @@ const SHORTCUTS = [
 ];
 
 const NAV_LINKS = [
+  { href: "/#skills", label: "skills" },
   { href: "/#experience", label: "experience" },
   { href: "/art", label: "art" },
   { href: "/current", label: "current" },
@@ -100,12 +101,12 @@ export default function Nav() {
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-paper/85 dark:bg-ink/85 backdrop-blur-sm border-b border-line dark:border-white/10">
         <div className="max-w-wide mx-auto px-5 md:px-7 h-14 flex items-center justify-between">
-          <Link href="/" className="font-mono text-sm" data-cursor-hover>
+          <Link href="/" className="font-mono text-[0.8rem]" data-cursor-hover>
             amy /
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-6 font-mono text-sm text-ink-soft dark:text-white/80">
+          <div className="hidden md:flex items-center gap-6 font-mono text-[0.8rem] text-ink-soft dark:text-white/80">
             {NAV_LINKS.map(({ href, label }) => (
               <Link
                 key={label}
@@ -253,8 +254,8 @@ function IconButton({
 function SunIcon() {
   return (
     <svg
-      width="16"
-      height="16"
+      width="15"
+      height="15"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -278,8 +279,8 @@ function SunIcon() {
 function MoonIcon() {
   return (
     <svg
-      width="16"
-      height="16"
+      width="15"
+      height="15"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -295,8 +296,8 @@ function MoonIcon() {
 function GridIcon() {
   return (
     <svg
-      width="16"
-      height="16"
+      width="15"
+      height="15"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
