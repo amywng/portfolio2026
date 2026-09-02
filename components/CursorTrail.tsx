@@ -17,15 +17,21 @@ export default function CursorTrail() {
     const cursor = cursorRef.current;
     if (!cursor) return;
 
-    // Set position directly on mousemove — no rAF delay, transform avoids layout
-    function onMove(e: MouseEvent) {
-      if (!cursor) return;
+    function onMove(e: PointerEvent) {
+      if (!cursor || e.pointerType !== "mouse") return;
+      const inViewport =
+        e.clientX >= 0 &&
+        e.clientY >= 0 &&
+        e.clientX <= window.innerWidth &&
+        e.clientY <= window.innerHeight;
+      cursor.style.opacity = inViewport ? "1" : "0";
       cursor.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
     }
 
-    // Trail dots throttled to ~30ms so we don't flood the DOM
+    // Trail dots throttled to ~30ms
     let lastDot = 0;
-    function onMoveTrail(e: MouseEvent) {
+    function onMoveTrail(e: PointerEvent) {
+      if (e.pointerType !== "mouse") return;
       const now = Date.now();
       if (now - lastDot < 30) return;
       lastDot = now;
@@ -42,13 +48,13 @@ export default function CursorTrail() {
       cursor?.classList.toggle("cursor-hover-active", Boolean(target));
     }
 
-    window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("mousemove", onMoveTrail, { passive: true });
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointermove", onMoveTrail, { passive: true });
     window.addEventListener("mouseover", onOver, { passive: true });
 
     return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mousemove", onMoveTrail);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointermove", onMoveTrail);
       window.removeEventListener("mouseover", onOver);
       document.body.classList.remove("cursor-none");
     };
