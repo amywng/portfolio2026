@@ -27,6 +27,9 @@ import {
   SiJunit5,
   SiTailwindcss,
   SiPostman,
+  SiAdobeillustrator,
+  SiAdobepremierepro,
+  SiAutodeskmaya,
 } from "react-icons/si";
 import type { IconType } from "react-icons";
 
@@ -47,10 +50,10 @@ const skills: Category[] = [
     items: [
       { label: "Java", icon: SiOpenjdk, color: "#ED8B00" },
       { label: "Kotlin", icon: SiKotlin, color: "#7F52FF" },
-      { label: "Swift", icon: SiSwift, color: "#F05138" },
       { label: "Python", icon: SiPython, color: "#3776AB" },
-      { label: "JavaScript", icon: SiJavascript, color: "#F7DF1E" },
       { label: "TypeScript", icon: SiTypescript, color: "#3178C6" },
+      { label: "JavaScript", icon: SiJavascript, color: "#F7DF1E" },
+      { label: "Swift", icon: SiSwift, color: "#F05138" },
     ],
   },
 
@@ -109,6 +112,7 @@ const skills: Category[] = [
     category: "tools",
     items: [
       { label: "Git", icon: SiGit, color: "#F05032" },
+      { label: "VS Code", icon: SiVisualstudiocode, color: "#007ACC" },
       { label: "Postman", icon: SiPostman, color: "#FF6C37" },
       { label: "Jest", icon: SiJest, color: "#C21325" },
       { label: "JUnit", icon: SiJunit5, color: "#25A162" },
@@ -116,7 +120,9 @@ const skills: Category[] = [
       { label: "Proxyman" },
       { label: "Unix" },
       { label: "Vim" },
-      { label: "VS Code", icon: SiVisualstudiocode, color: "#007ACC" },
+      { label: "Illustrator", icon: SiAdobeillustrator, color: "#FF9A00" },
+      { label: "Premiere Pro", icon: SiAdobepremierepro, color: "#9999FF" },
+      { label: "Maya", icon: SiAutodeskmaya, color: "#16A8CB" },
     ],
   },
 ];
